@@ -128,6 +128,11 @@ header h1 {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
+
+.post-item h2 {
+  color: red;
+}
+
 /*FOOTER*/
 footer {
   background: #000000;
