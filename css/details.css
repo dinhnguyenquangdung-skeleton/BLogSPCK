@@ -1,0 +1,63 @@
+.post {
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.post h1 {
+  margin-top: 0;
+  color: #1565c0;
+}
+
+.post p {
+  line-height: 1.6;
+  color: #333;
+}
+
+#likeBtn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #eee;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+#likeBtn:hover {
+  background: #ffdddd;
+}
+
+#likeBtn.liked {
+  background: #ff4d4d;
+  color: white;
+}
+
+.comment-section {
+  margin-top: 30px;
+}
+
+.comment-section input,
+.comment-section textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.comment-section button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.comment {
+  background: #f9f9f9;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+}

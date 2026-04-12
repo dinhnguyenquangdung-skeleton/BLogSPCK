@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bài viết</title>
+    <link rel="stylesheet" href="../SPCk/css/details.css" />
+  </head>
+
+  <body>
+    <header>
+      <h2>Dũng Blog</h2>
+      <div class="menu">
+        <a href="Blog.html">Trang chủ</a>
+      </div>
+    </header>
+    <div class="main">
+      <div class="post"></div>
+
+      <button id="likeBtn" onclick="likePost()">
+      👍 <span id="likeCount">0</span>
+      </button>
+
+      <div class="comment-section">
+  <h3>Bình luận</h3>
+
+  <input type="text" id="username" placeholder="Tên của bạn..." />
+  <textarea id="commentInput" placeholder="Viết bình luận..."></textarea>
+
+  <button onclick="addComment()">Gửi</button>
+
+  <div id="commentList"></div>
+</div>
+    </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+      import {
+        collection,
+        getDocs,
+        getFirestore,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+        authDomain: "jsi13-9ebf7.firebaseapp.com",
+        projectId: "jsi13-9ebf7",
+        storageBucket: "jsi13-9ebf7.firebasestorage.app",
+        messagingSenderId: "826706136731",
+        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      const db = getFirestore(app);
+
+      const eleBody = document.querySelector(".post");
+      const querySnapshot = await getDocs(collection(db, "myblog"));
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+
+        eleBody.innerHTML += `
+        <tr>
+          <td>${doc.data().Name_of_blog}</td> <br>
+          <td>${doc.data().describe}</td> <br>
+          <td>${doc.data().date}</td> <br>
+        </tr>
+        `;
+      });
+    </script>
+    </div>
+  </body>
+</html>
