@@ -93,20 +93,6 @@ header h1 {
   gap: 20px;
 }
 
-.post {
-  background: rgba(19, 73, 253, 0.95);
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 5px solid #ffd54f;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.post:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
 .post h3 {
   margin: 0 0 10px;
   color: #1565c0;
@@ -131,6 +117,10 @@ header h1 {
 
 .post-item h2 {
   color: red;
+}
+
+.post-item a {
+  text-decoration: none;
 }
 
 /*FOOTER*/

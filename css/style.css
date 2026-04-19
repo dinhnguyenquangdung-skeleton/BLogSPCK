@@ -1,9 +1,25 @@
-body {
+/* RESET */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: Arial, sans-serif;
 }
 
-/* LAYOUT CHÍNH */
+/* LINK */
+a {
+  text-decoration: none;
+  color: #1565c0;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LAYOUT */
 .container {
   display: flex;
   height: 100vh;
@@ -15,17 +31,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-
   background: linear-gradient(135deg, #5f95c9, #a9c3de);
 }
 
 .left-content {
   text-align: center;
   color: white;
+  padding: 20px;
 }
 
 .left h1 {
-  font-size: 40px;
+  font-size: 38px;
   margin-bottom: 10px;
 }
 
@@ -37,18 +53,23 @@ body {
 .right {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #f0f2f5;
+  padding: 20px;
 }
 
-/* LOGIN BOX */
-.login-box {
-  width: 350px;
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
+.right h1 {
+  margin-bottom: 20px;
+}
 
+/* FORM */
+form {
+  width: 320px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,52 +77,49 @@ body {
 input {
   width: 100%;
   padding: 12px;
-  margin: 8px 0;
+  margin: 10px 0;
 
   border-radius: 6px;
   border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s;
 }
 
-/* BUTTON LOGIN */
-.login-btn {
+input:focus {
+  border-color: #1565c0;
+}
+
+/* BUTTON */
+.btn {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
 
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background: #1565c0;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.login-btn:hover {
+.btn:hover {
   background: #0d47a1;
 }
 
-/* FORGOT */
-.forgot {
-  text-align: center;
-  color: #1565c0;
-  cursor: pointer;
+/* TEXT */
+.right p {
+  margin-top: 15px;
   font-size: 14px;
+  text-align: center;
 }
 
-/* REGISTER */
-.register-btn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-
-  border: none;
-  border-radius: 6px;
-  background: #ffd54f;
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.register-btn:hover {
-  background: #ffca28;
+/* ERROR TEXT */
+.user_email,
+.user_pass,
+.user_confpass {
+  font-size: 13px;
+  color: red;
+  height: 14px;
 }
