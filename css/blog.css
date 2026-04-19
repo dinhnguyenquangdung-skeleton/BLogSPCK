@@ -177,11 +177,11 @@ footer {
 
 /* SIDEBAR */
 .sidebar {
+  background: #e5ee8f;
+  top: 0;
+  left: 0;
   width: 220px;
   height: 100vh;
-  background: #e5ee8f;
-  padding: 20px;
-  margin-top: 60px;
 }
 
 .sidebar h1,
