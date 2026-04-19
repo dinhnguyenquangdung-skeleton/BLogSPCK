@@ -64,7 +64,7 @@ header h1 {
 
 .main {
   width: 1000px;
-  margin: 120px auto 40px; /* tự căn giữa */
+  margin: 120px auto 0; /* tự căn giữa */
   padding: 30px;
   border-radius: 15px;
 }
@@ -136,7 +136,6 @@ header h1 {
 /*FOOTER*/
 footer {
   background: #000000;
-  margin-top: 40px;
   padding: 30px 0;
   text-align: center;
 }
@@ -173,15 +172,23 @@ footer {
 
 .container {
   display: flex;
+  flex: 1;
 }
 
 /* SIDEBAR */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .sidebar {
-  background: #e5ee8f;
-  top: 0;
-  left: 0;
   width: 220px;
-  height: 100vh;
+  min-height: 100vh;
+  background: #e5ee8f;
+  padding: 20px;
+  margin-top: 60px;
+  bottom: 0px;
 }
 
 .sidebar h1,

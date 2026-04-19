@@ -18,24 +18,88 @@
 
       <!-- RIGHT -->
       <div class="right">
-        <div class="login-box">
-          <h3>Đăng ký</h3>
-
-          <input type="text" placeholder="Họ và tên" />
-          <input type="text" placeholder="Email" />
-          <input type="password" placeholder="Mật khẩu" />
-          <input type="password" placeholder="Nhập lại mật khẩu" />
-
-          <button class="register-btn">Đăng ký</button>
-
-          <hr />
-
-          <p class="switch">
-            Đã có tài khoản?
-            <a href="login.html">Đăng nhập</a>
-          </p>
-        </div>
+        <h1>Đăng ký</h1>
+        <form action="#">
+          <input
+            class="user_valueemail"
+            type="text"
+            id="email"
+            placeholder="Email"
+          />
+          <p class="user_email"></p>
+          <input
+            class="user_valuepassword"
+            type="password"
+            id="password"
+            placeholder="Password"
+          />
+          <p class="user_pass"></p>
+          <input
+            type="password"
+            id="confpassword"
+            placeholder="Confirm Password"
+          />
+          <p class="user_confpass"></p>
+          <button id="btn_register" type="button">Đăng Ký</button>
+        </form>
+        <p>
+          Đã có tài khoản?
+          <a href="Login.html">Đăng nhập ngay</a>
+        </p>
       </div>
     </div>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+        authDomain: "jsi13-9ebf7.firebaseapp.com",
+        projectId: "jsi13-9ebf7",
+        storageBucket: "jsi13-9ebf7.firebasestorage.app",
+        messagingSenderId: "826706136731",
+        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+      };
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      //B1
+      const auth = getAuth(app);
+      //B2
+
+      const eleBtn = document.querySelector("#btn_register");
+
+      eleBtn.addEventListener("click", () => {
+        const erremail = document.querySelector("#email").value;
+        const errpassword = document.querySelector("#password").value;
+        const errconfpassword = document.querySelector("#confpassword").value;
+        if (!erremail || !errpassword || !errconfpassword) {
+          alert("Nhập đầy đủ thông tin!");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alert("Mật khẩu không khớp!");
+          return;
+        }
+
+        createUserWithEmailAndPassword(auth, erremail, errpassword)
+          .then((userCredential) => {
+            console.log("Đăng ký thành công:", userCredential.user);
+            alert("Đăng ký thành công!");
+            window.location.href = "login.html";
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      });
+    </script>
   </body>
 </html>
