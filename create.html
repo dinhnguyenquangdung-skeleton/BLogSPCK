@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thêm bài</title>
+    <link rel="stylesheet" href="./css/create.css" />
+  </head>
+
+  <body>
+    <div class="form-container">
+      <h2>Thêm bài viết</h2>
+
+      <input id="title" placeholder="Nhập tiêu đề..." />
+      <textarea id="content" placeholder="Nhập nội dung..."></textarea>
+
+      <button onclick="createPost()">Đăng bài</button>
+    </div>
+    <script type="module" src="">
+              import { db } from "./firebase.js";
+      import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      window.createPost = async () => {
+        const title = document.getElementById("title").value;
+        const content = document.getElementById("content").value;
+
+        await addDoc(collection(db, "posts"), {
+          title,
+          content,
+          createdAt: new Date()
+        });
+
+        alert("Đã thêm!");
+        window.location.href = "dashboard.html";
+      };
+    </script>
+  </body>
+</html>

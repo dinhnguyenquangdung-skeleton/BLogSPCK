@@ -7,65 +7,107 @@
   </head>
 
   <body>
-    <div class="admin">
-      <!-- SIDEBAR -->
-      <div class="sidebar">
-        <h2>⚡ Admin</h2>
-        <ul>
-          <li onclick="goDashboard()">Dashboard</li>
-          <li onclick="goCreate()">Thêm bài</li>
-          <li>Người dùng</li>
-          <li>Đăng xuất</li>
-        </ul>
-      </div>
+    <!doctype html>
+    <html lang="vi">
+      <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="admin.css" />
+      </head>
 
-      <!-- MAIN -->
-      <div class="main">
-        <!-- TOPBAR -->
-        <div class="topbar">
-          <h3>Quản lý bài viết</h3>
+      <body>
+        <div class="admin">
+          <div class="sidebar">
+            <h2>Admin</h2>
+            <li onclick="location.href = 'dashboard.html'">Dashboard</li>
+            <li onclick="location.href = 'create.html'">Thêm bài</li>
+          </div>
+
+          <div class="main">
+            <div class="topbar">
+              <h3>Quản lý bài viết</h3>
+            </div>
+
+            <div class="content">
+              <button class="add-btn" onclick="location.href = 'create.html'">
+                + Thêm bài
+              </button>
+
+              <div id="post-list" class="post-grid"></div>
+            </div>
+          </div>
         </div>
 
-        <!-- CONTENT -->
-        <div class="content">
-          <button class="add-btn" onclick="goCreate()">+ Thêm bài</button>
+        <script type="module">
+          // Import the functions you need from the SDKs you need
+          import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+          import {
+            collection,
+            getDocs,
+            getFirestore,
+            addDoc,
+            deleteDoc,
+            doc,
+            updateDoc,
+            increment,
+          } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-          <div id="post-list" class="post-grid"></div>
+          // TODO: Add SDKs for Firebase products that you want to use
+          // https://firebase.google.com/docs/web/setup#available-libraries
+
+          // Your web app's Firebase configuration
+          const firebaseConfig = {
+            apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+            authDomain: "jsi13-9ebf7.firebaseapp.com",
+            projectId: "jsi13-9ebf7",
+            storageBucket: "jsi13-9ebf7.firebasestorage.app",
+            messagingSenderId: "826706136731",
+            appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+          };
+
+          // Initialize Firebase
+          const app = initializeApp(firebaseConfig);
+
+          const db = getFirestore(app);
+
+          const postList = document.getElementById("post-list");
+
+          async function loadPosts() {
+            postList.innerHTML = "";
+
+            const snapshot = await getDocs(collection(db, "posts"));
+
+            snapshot.forEach((docSnap) => {
+              const post = docSnap.data();
+              const id = docSnap.id;
+
+              postList.innerHTML += `
+      <div class="post">
+        <h3>${post.title}</h3>
+        <p>${post.content}</p>
+
+        <div class="actions">
+          <button class="edit" onclick="editPost('${id}')">Sửa</button>
+          <button class="delete" onclick="deletePost('${id}')">Xóa</button>
         </div>
       </div>
-    </div>
+    `;
+            });
+          }
 
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-      import {
-        collection,
-        getDocs,
-        getFirestore,
-        addDoc,
-        deleteDoc,
-        doc,
-        updateDoc,
-        increment,
-      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+          loadPosts();
 
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
+          window.deletePost = async (id) => {
+            if (confirm("Xóa bài này?")) {
+              await deleteDoc(doc(db, "posts", id));
+              loadPosts();
+            }
+          };
 
-      // Your web app's Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
-        authDomain: "jsi13-9ebf7.firebaseapp.com",
-        projectId: "jsi13-9ebf7",
-        storageBucket: "jsi13-9ebf7.firebasestorage.app",
-        messagingSenderId: "826706136731",
-        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-
-      const db = getFirestore(app);
-    </script>
+          window.editPost = (id) => {
+            window.location.href = `edit.html?id=${id}`;
+          };
+        </script>
+      </body>
+    </html>
   </body>
 </html>
