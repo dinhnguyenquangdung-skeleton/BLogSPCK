@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" href="admin.css" />
+    <link rel="stylesheet" href="./css/edit.css" />
   </head>
 
   <body>
@@ -14,6 +14,80 @@
       <button onclick="updatePost()">Lưu</button>
     </div>
 
-    <script type="module" src="edit.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        updateDoc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+        authDomain: "jsi13-9ebf7.firebaseapp.com",
+        projectId: "jsi13-9ebf7",
+        storageBucket: "jsi13-9ebf7.firebasestorage.app",
+        messagingSenderId: "826706136731",
+        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+      const db = getFirestore(app);
+
+      const id = new URLSearchParams(window.location.search).get("id");
+
+      const titleEl = document.getElementById("title");
+      const contentEl = document.getElementById("content");
+      const btn = document.querySelector("button");
+
+      // load dữ liệu
+      async function loadPost() {
+        const snap = await getDoc(doc(db, "posts", id));
+
+        if (snap.exists()) {
+          const data = snap.data();
+          titleEl.value = data.title;
+          contentEl.value = data.content;
+        }
+      }
+
+      loadPost();
+
+      // update
+      window.updatePost = async () => {
+        if (!titleEl.value.trim() || !contentEl.value.trim()) {
+          alert("Nhập đầy đủ thông tin!");
+          return;
+        }
+
+        try {
+          btn.innerText = "Đang lưu...";
+          btn.disabled = true;
+
+          await updateDoc(doc(db, "posts", id), {
+            title: titleEl.value,
+            content: contentEl.value,
+          });
+
+          // ✅ quay lại dashboard
+          window.location.href = "admin.html";
+        } catch (err) {
+          alert("Lỗi khi cập nhật!");
+          console.error(err);
+          btn.innerText = "Lưu thay đổi";
+          btn.disabled = false;
+        }
+      };
+    </script>
   </body>
 </html>

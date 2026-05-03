@@ -13,33 +13,63 @@
         <a href="index.html">Trang chủ</a>
       </div>
     </header>
+    <div class="container">
+    <div class="sidebar">
+        <h1>📂 Menu</h1>
+        <h2><a href="index.html">🏠 Trang chủ</a></h2>
+      </div>
     <div class="main">
       <div class="post"></div>
-
-      <button id="likeBtn" onclick="likePost()">
-      👍 <span id="likeCount">0</span>
+      <!-- LIKE -->
+      <button onclick="likePost()">
+        👍 <span id="likeCount">0</span>
       </button>
 
+      <!-- COMMENT -->
       <div class="comment-section">
-  <h3>Bình luận</h3>
+        <h3>Bình luận</h3>
 
-  <input type="text" id="username" placeholder="Tên của bạn..." />
-  <textarea id="commentInput" placeholder="Viết bình luận..."></textarea>
+        <input id="username" placeholder="Tên..." />
+        <textarea id="commentInput" placeholder="Viết bình luận..."></textarea>
 
-  <button onclick="addComment()">Gửi</button>
+        <button onclick="addComment()">Gửi</button>
 
-  <div id="commentList"></div>
-</div>
+        <div id="commentList"></div>
+      </div>
     </div>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <h3>Blog của Dũng</h3>
+        <p>Chia sẻ suy nghĩ, học tập và cuộc sống ✨</p>
+
+        <div class="social">
+          <a href="#">Facebook</a>
+          <a href="#">GitHub</a>
+          <a href="#">Email</a>
+        </div>
+
+        <p class="copyright">© 2026 Dũng. Năm mới tôi mới .</p>
+      </div>
+    </footer>
     <script type="module">
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
       import {
-        collection,
-        getDocs,
         getFirestore,
-        addDoc, deleteDoc, doc, updateDoc, increment
+        doc,
+        getDoc,
+        updateDoc,
+        increment,
+        collection,
+        addDoc,
+        getDocs
       } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+        import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
@@ -56,32 +86,155 @@
 
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
-
       const db = getFirestore(app);
+      const auth = getAuth(app);
 
       const params = new URLSearchParams(window.location.search);
-      const id = params.get("doc.id");
+      const id = params.get("id");
 
-      console.log("URL:", window.location.href);
-      console.log("postId:", id);
+  const eleBody = document.querySelector(".post");
 
-      const eleBody = document.querySelector(".post");
-      const querySnapshot = await getDocs(collection(db, "myblog",id));
-      querySnapshot.forEach((doc) => {
-        console.log(doc.data());
+  let currentUser = null;
 
-        eleBody.innerHTML += `
+  // =====================
+  // 🔐 CHECK LOGIN
+  // =====================
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser = user;
+      console.log("Đã đăng nhập:", user.uid);
+    } else {
+      currentUser = null;
+      console.log("Chưa đăng nhập");
+    }
+  });
+
+  // ❗ nếu không có id
+  if (!id) {
+    eleBody.innerHTML = "<h2>Không tìm thấy bài viết 😢</h2>";
+  }
+
+  // =====================
+  // 🧠 LOAD POST
+  // =====================
+  async function loadPost() {
+    const snap = await getDoc(doc(db, "myblog", id));
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      eleBody.innerHTML = `
         <div class="post-item"> 
-          <a href = "details.html?id=${doc.id}">
-          <h2>${doc.data().Name_of_blog}</h2> <br>       
-          <h2>${doc.data().describe}</h2> <br>    
-          <p>${doc.data().date}</p> <br>
-          </a>
+          <h2>${data.Name_of_blog}</h2>
+          <p>${data.describe}</p>
+          <small>${data.date}</small>
         </div>
-        `;
+      `;
+
+      // ✅ load like
+      document.getElementById("likeCount").innerText = data.likes || 0;
+
+    } else {
+      eleBody.innerHTML = "<h2>Bài viết không tồn tại 😢</h2>";
+    }
+  }
+
+  // =====================
+  // ❤️ LIKE (1 LẦN / USER)
+  // =====================
+  window.likePost = async () => {
+    if (!currentUser) {
+      alert("Phải đăng nhập để like!");
+      return;
+    }
+
+    try {
+      const likeRef = doc(db, "myblog", id, "likes", currentUser.uid);
+      const likeSnap = await getDoc(likeRef);
+
+      if (likeSnap.exists()) {
+        alert("Bạn đã like rồi!");
+        return;
+      }
+
+      // lưu user đã like
+      await setDoc(likeRef, {});
+
+      // tăng like
+      const postRef = doc(db, "myblog", id);
+      const snap = await getDoc(postRef);
+      const currentLikes = snap.data().likes || 0;
+
+      await updateDoc(postRef, {
+        likes: currentLikes + 1
       });
-      
-      
+
+      document.getElementById("likeCount").innerText = currentLikes + 1;
+
+    } catch (err) {
+      console.error(err);
+      alert("Like lỗi!");
+    }
+  };
+
+  // =====================
+  // 💬 LOAD COMMENT
+  // =====================
+  async function loadComments() {
+    const list = document.getElementById("commentList");
+    list.innerHTML = "";
+
+    const snapshot = await getDocs(
+      collection(db, "myblog", id, "comments")
+    );
+
+    snapshot.forEach((doc) => {
+      const c = doc.data();
+
+      list.innerHTML += `
+        <div class="comment">
+          <b>${c.username}</b>: ${c.text}
+        </div>
+      `;
+    });
+  }
+
+  // =====================
+  // ➕ ADD COMMENT (CẦN LOGIN)
+  // =====================
+  window.addComment = async () => {
+    if (!currentUser) {
+      alert("Phải đăng nhập để bình luận!");
+      return;
+    }
+
+    const username = document.getElementById("username").value.trim();
+    const text = document.getElementById("commentInput").value.trim();
+
+    if (!username || !text) {
+      alert("Nhập đầy đủ!");
+      return;
+    }
+
+    await addDoc(collection(db, "myblog", id, "comments"), {
+      username,
+      text,
+      userId: currentUser.uid,
+      createdAt: new Date()
+    });
+
+    document.getElementById("commentInput").value = "";
+
+    loadComments();
+  };
+
+  // =====================
+  // 🚀 INIT
+  // =====================
+  loadPost();
+  loadComments();
+
+console.log("USER HIỆN TẠI:", getAuth().currentUser);
     </script>
     </div>
   </body>

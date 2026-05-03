@@ -96,14 +96,9 @@ header h1 {
 .post {
   padding: 20px;
   border-radius: 12px;
-  border-left: 5px solid #ffd54f;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   cursor: pointer;
-}
-
-.post:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .post h3 {
@@ -123,14 +118,9 @@ header h1 {
   border-left: 5px solid orange;
 }
 
-.post-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
 /*FOOTER*/
 footer {
   background: #000000;
-  margin-top: 40px;
   padding: 30px 0;
   text-align: center;
 }
@@ -167,15 +157,23 @@ footer {
 
 .container {
   display: flex;
+  flex: 1;
 }
 
 /* SIDEBAR */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .sidebar {
   width: 220px;
-  height: 100vh;
+  min-height: 100vh;
   background: #e5ee8f;
   padding: 20px;
   margin-top: 60px;
+  bottom: 0px;
 }
 
 .sidebar h1,
