@@ -38,6 +38,7 @@
         collection,
         getDocs,
         getFirestore,
+        addDoc, deleteDoc, doc, updateDoc, increment
       } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
       // TODO: Add SDKs for Firebase products that you want to use
@@ -58,19 +59,28 @@
 
       const db = getFirestore(app);
 
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("doc.id");
+
+      console.log("URL:", window.location.href);
+      console.log("postId:", id);
+
       const eleBody = document.querySelector(".post");
-      const querySnapshot = await getDocs(collection(db, "myblog"));
+      const querySnapshot = await getDocs(collection(db, "myblog",id));
       querySnapshot.forEach((doc) => {
         console.log(doc.data());
 
         eleBody.innerHTML += `
-        <tr>
-          <td>${doc.data().Name_of_blog}</td> <br>
-          <td>${doc.data().describe}</td> <br>
-          <td>${doc.data().date}</td> <br>
-        </tr>
+        <div class="post-item"> 
+          <a href = "details.html?id=${doc.id}">
+          <h2>${doc.data().Name_of_blog}</h2> <br>       
+          <p>${doc.data().date}</p> <br>
+          </a>
+        </div>
         `;
       });
+      
+      
     </script>
     </div>
   </body>

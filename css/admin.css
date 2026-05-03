@@ -1,0 +1,115 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+}
+
+.admin {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #f4c90e;
+  color: rgb(0, 0, 0);
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.sidebar li:hover {
+  background: #353b48;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+}
+
+/* TOPBAR */
+.topbar {
+  background: white;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* CONTENT */
+.content {
+  padding: 20px;
+}
+
+/* BUTTON */
+.add-btn {
+  background: #0984e3;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #74b9ff;
+}
+
+/* POST GRID */
+.post-grid {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+/* CARD */
+.post {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post h3 {
+  margin: 0 0 10px;
+}
+
+.post p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* ACTION */
+.actions {
+  margin-top: 10px;
+}
+
+.actions button {
+  border: none;
+  padding: 6px 10px;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit {
+  background: #fbc531;
+}
+
+.delete {
+  background: #e84118;
+  color: white;
+}
