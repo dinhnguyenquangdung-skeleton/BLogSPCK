@@ -10,13 +10,17 @@
     <header>
       <h1>Blog của Dũng</h1>
       <div class="menu">
-        <a href="Login.html">Đăng nhập</a>
+        <a href="Login.html" id="loginBtn">Đăng nhập</a>
       </div>
     </header>
     <div class="container">
       <div class="sidebar">
-        <h1>📂 Menu</h1>
         <h2><a href="#">🏠 Trang chủ</a></h2>
+        <h2>
+          <a href="profile.html" id="profileBtn" style="display: none"
+            >👥 Thông tin người dùng</a
+          >
+        </h2>
       </div>
       <!-- MAIN -->
       <div class="main">
@@ -52,6 +56,11 @@
         getFirestore,
       } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -70,6 +79,8 @@
 
       const db = getFirestore(app);
 
+      const auth = getAuth(app);
+
       const eleBody = document.querySelector(".post");
       const querySnapshot = await getDocs(collection(db, "myblog"));
       querySnapshot.forEach((doc) => {
@@ -83,6 +94,24 @@
           </a>
         </div>
         `;
+      });
+
+      const loginBtn = document.getElementById("loginBtn");
+
+      const profileBtn = document.getElementById("profileBtn");
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // ĐÃ LOGIN
+          loginBtn.style.display = "none";
+
+          profileBtn.style.display = "block";
+        } else {
+          // CHƯA LOGIN
+          loginBtn.style.display = "block";
+
+          profileBtn.style.display = "none";
+        }
       });
     </script>
   </body>

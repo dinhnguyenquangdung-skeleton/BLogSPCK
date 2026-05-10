@@ -1,7 +1,11 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f6fa;
+  background-image: url("../img/image.png");
+  background-size: cover; /* phủ toàn màn hình */
+  background-position: center; /* căn giữa */
+  background-repeat: no-repeat; /* không lặp */
+  background-attachment: fixed; /* cuộn không bị trôi */
 }
 
 .admin {

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+
+    <!-- ICON -->
+    <link
+      rel="stylesheet"
+      href="./css/profile.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <header>
+      <h1>👤 Hồ sơ cá nhân</h1>
+
+      <a href="index.html" class="back-btn"> Quay lại </a>
+    </header>
+
+    <div class="container">
+      <div class="profile-card">
+        <!-- TOP -->
+        <div class="top">
+          <div class="avatar">
+            <img id="avatar" src="https://i.pravatar.cc/300" />
+          </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+          <h2 id="username">Loading...</h2>
+
+          <p class="role">Thành viên Blog của Dũng ✨</p>
+
+          <!-- INFO -->
+          <div class="info-grid">
+            <div class="info-box">
+              <h3>Thông tin</h3>
+
+              <p>
+                <i class="fa-solid fa-envelope"></i>
+                <span id="email"></span>
+              </p>
+
+              <p>
+                <i class="fa-solid fa-calendar"></i>
+                Thành viên mới
+              </p>
+            </div>
+
+            <div class="info-box">
+              <h3>Tài khoản</h3>
+
+              <p>
+                <i class="fa-solid fa-shield"></i>
+                Bảo mật bằng Firebase
+              </p>
+
+              <p>
+                <i class="fa-solid fa-user-check"></i>
+                Đã xác thực
+              </p>
+            </div>
+          </div>
+
+          <!-- PASSWORD -->
+<div class="password-box">
+
+  <h3>🔒 Đổi mật khẩu</h3>
+
+  <!-- MẬT KHẨU CŨ -->
+  <input
+    type="password"
+    id="oldPassword"
+    placeholder="Nhập mật khẩu cũ"
+  />
+
+  <!-- MẬT KHẨU MỚI -->
+  <input
+    type="password"
+    id="newPassword"
+    placeholder="Nhập mật khẩu mới"
+  />
+
+  <button onclick="changePassword()">
+    Đổi mật khẩu
+  </button>
+
+  <div id="message"></div>
+
+</div>
+
+            <button onclick="changePassword()">Đổi mật khẩu</button>
+
+            <div id="message"></div>
+          </div>
+
+          <!-- ACTION -->
+          <div class="actions">
+            <button class="logout-btn" id="logoutBtn">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Đăng xuất
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+        updatePassword,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+        authDomain: "jsi13-9ebf7.firebaseapp.com",
+        projectId: "jsi13-9ebf7",
+        storageBucket: "jsi13-9ebf7.firebasestorage.app",
+        messagingSenderId: "826706136731",
+        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+      };
+
+      const app = initializeApp(firebaseConfig);
+
+      const auth = getAuth(app);
+
+      // USER CHECK
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          document.getElementById("username").textContent =
+            user.displayName || "Người dùng";
+
+          document.getElementById("email").textContent = user.email;
+
+          // avatar random
+          document.getElementById("avatar").src =
+            `https://ui-avatars.com/api/?name=${
+              user.email
+            }&background=2563eb&color=fff`;
+        } else {
+          window.location.href = "Login.html";
+        }
+      });
+
+      // LOGOUT
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          await signOut(auth);
+
+          window.location.href = "index.html";
+        });
+
+        window.changePassword =
+async function () {
+
+  const oldPassword =
+    document.getElementById(
+      "oldPassword"
+    ).value;
+
+  const newPassword =
+    document.getElementById(
+      "newPassword"
+    ).value;
+
+  const user =
+    auth.currentUser;
+
+  const message =
+    document.getElementById(
+      "message"
+    );
+
+  // CHECK PASSWORD LENGTH
+  if (newPassword.length < 6) {
+
+    message.style.color =
+    "#ef4444";
+
+    message.innerHTML =
+    "❌ Mật khẩu mới phải từ 6 ký tự";
+
+    return;
+
+  }
+
+  try {
+
+    // XÁC THỰC MẬT KHẨU CŨ
+    const credential =
+      EmailAuthProvider.credential(
+        user.email,
+        oldPassword
+      );
+
+    await reauthenticateWithCredential(
+      user,
+      credential
+    );
+
+    // ĐỔI MẬT KHẨU
+    await updatePassword(
+      user,
+      newPassword
+    );
+
+    message.style.color =
+    "#22c55e";
+
+    message.innerHTML =
+    "✅ Đổi mật khẩu thành công";
+
+    // RESET INPUT
+    document.getElementById(
+      "oldPassword"
+    ).value = "";
+
+    document.getElementById(
+      "newPassword"
+    ).value = "";
+
+  } catch (error) {
+
+    message.style.color =
+    "#ef4444";
+
+    message.innerHTML =
+    "❌ Mật khẩu cũ không đúng";
+
+  }
+
+};
+    </script>
+  </body>
+</html>

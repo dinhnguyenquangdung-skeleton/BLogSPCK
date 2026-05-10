@@ -1,5 +1,5 @@
 body {
-  background-image: url("../img/download.jpg");
+  background-image: url("../img/image.png");
   background-size: cover; /* phủ toàn màn hình */
   background-position: center; /* căn giữa */
   background-repeat: no-repeat; /* không lặp */
@@ -13,7 +13,7 @@ header {
   width: 100%;
   box-sizing: border-box;
 
-  background: linear-gradient(135deg, #162839, #7faed6);
+  background: linear-gradient(135deg, #162839);
   color: white;
 
   display: flex;
@@ -81,9 +81,10 @@ header h1 {
   margin-bottom: 10px;
 }
 
-.profile h3 {
+.profile h1,
+h2 {
   margin: 5px 0;
-  color: #0d47a1;
+  color: #ec1919;
 }
 
 /* POSTS */
@@ -175,7 +176,7 @@ footer {
 .sidebar {
   width: 220px;
   min-height: 100vh;
-  background: #e5ee8f;
+  background: #f4c90e;
   padding: 20px;
   margin-top: 60px;
   bottom: 0px;
