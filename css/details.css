@@ -239,6 +239,10 @@ h2 {
   margin-top: 30px;
 }
 
+.comment-section h3 {
+  color: red;
+}
+
 .comment-section input,
 .comment-section textarea {
   width: 100%;

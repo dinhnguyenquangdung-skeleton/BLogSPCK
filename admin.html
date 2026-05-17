@@ -7,107 +7,210 @@
   </head>
 
   <body>
-    <!doctype html>
-    <html lang="vi">
-      <head>
-        <meta charset="UTF-8" />
-        <link rel="stylesheet" href="admin.css" />
-      </head>
+    <div id="loading">Đang tải...</div>
+    <!-- LOGIN -->
+    <div id="loginPage" class="login-box">
+      <h2>Đăng nhập Admin</h2>
 
-      <body>
-        <div class="admin">
-          <div class="sidebar">
-            <h2>Admin</h2>
-            <h2><a href="index.html">🏠 Trang chủ</a></h2>
-            <li onclick="location.href = 'create.html'">Thêm bài</li>
-          </div>
+      <input type="email" id="email" placeholder="Email" />
 
-          <div class="main">
-            <div class="topbar">
-              <h3>Quản lý bài viết</h3>
-            </div>
+      <input type="password" id="password" placeholder="Mật khẩu" />
 
-            <div class="content">
-              <button class="add-btn" onclick="location.href = 'create.html'">
-                + Thêm bài
-              </button>
+      <button onclick="login()">Đăng nhập</button>
+    </div>
 
-              <div id="post-list" class="post-grid"></div>
-            </div>
-          </div>
+    <!-- ADMIN -->
+    <div id="adminPanel">
+      <div class="admin">
+        <div class="sidebar">
+          <h2>Admin</h2>
+
+          <h2><a href="index.html">🏠 Trang chủ</a></h2>
+
+          <li onclick="location.href = 'create.html'">Thêm bài</li>
+
+          <button class="logout-btn" onclick="logout()">Đăng xuất</button>
         </div>
 
-        <script type="module">
-          // Import the functions you need from the SDKs you need
-          import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-          import {
-            collection,
-            getDocs,
-            getFirestore,
-            addDoc,
-            deleteDoc,
-            doc,
-            updateDoc,
-            increment,
-          } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        <div class="main">
+          <div class="topbar">
+            <h3>Quản lý bài viết</h3>
+          </div>
 
-          // TODO: Add SDKs for Firebase products that you want to use
-          // https://firebase.google.com/docs/web/setup#available-libraries
+          <div class="content">
+            <button class="add-btn" onclick="location.href = 'create.html'">
+              + Thêm bài
+            </button>
 
-          // Your web app's Firebase configuration
-          const firebaseConfig = {
-            apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
-            authDomain: "jsi13-9ebf7.firebaseapp.com",
-            projectId: "jsi13-9ebf7",
-            storageBucket: "jsi13-9ebf7.firebasestorage.app",
-            messagingSenderId: "826706136731",
-            appId: "1:826706136731:web:b1abbbd4a73477350f803e",
-          };
-
-          // Initialize Firebase
-          const app = initializeApp(firebaseConfig);
-
-          const db = getFirestore(app);
-
-          const postList = document.getElementById("post-list");
-
-          async function loadPosts() {
-            postList.innerHTML = "";
-
-            const snapshot = await getDocs(collection(db, "posts"));
-
-            snapshot.forEach((docSnap) => {
-              const post = docSnap.data();
-              const id = docSnap.id;
-
-              postList.innerHTML += `
-      <div class="post">
-        <h3>${post.title}</h3>
-        <p>${post.content}</p>
-
-        <div class="actions">
-          <button class="edit" onclick="editPost('${id}')">Sửa</button>
-          <button class="delete" onclick="deletePost('${id}')">Xóa</button>
+            <div id="post-list" class="post-grid"></div>
+          </div>
         </div>
       </div>
-    `;
-            });
-          }
+    </div>
+
+    <script type="module">
+      // FIREBASE
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+      import {
+        collection,
+        getDocs,
+        getFirestore,
+        deleteDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+      // CONFIG
+      const firebaseConfig = {
+        apiKey: "AIzaSyA7oeV_6LOhHanmv0x7rPky7_tFg8qQ9yQ",
+        authDomain: "jsi13-9ebf7.firebaseapp.com",
+        projectId: "jsi13-9ebf7",
+        storageBucket: "jsi13-9ebf7.firebasestorage.app",
+        messagingSenderId: "826706136731",
+        appId: "1:826706136731:web:b1abbbd4a73477350f803e",
+      };
+
+      // INIT
+      const app = initializeApp(firebaseConfig);
+
+      const db = getFirestore(app);
+
+      const auth = getAuth(app);
+      // ELEMENT
+      const postList = document.getElementById("post-list");
+
+      const loginPage = document.getElementById("loginPage");
+
+      const adminPanel = document.getElementById("adminPanel");
+
+      // =====================
+      // LOGIN
+      // =====================
+      window.login = async () => {
+        const email = document.getElementById("email").value;
+
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          alert("Nhập đầy đủ!");
+          return;
+        }
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          console.log(err);
+
+          alert("Bạn không phải admin!");
+        }
+      };
+
+      // =====================
+      // CHECK LOGIN
+      // =====================
+      onAuthStateChanged(auth, async (user) => {
+        setTimeout(() => {
+          loading.style.display = "none";
+        }, 500);
+        // ĐÚNG ADMIN
+        if (user && user.email === "professionadmin@gmail.com") {
+          loginPage.style.display = "none";
+
+          adminPanel.style.display = "block";
 
           loadPosts();
+        }
 
-          window.deletePost = async (id) => {
-            if (confirm("Xóa bài này?")) {
-              await deleteDoc(doc(db, "posts", id));
-              loadPosts();
-            }
-          };
+        // KHÔNG PHẢI ADMIN
+        else {
+          loginPage.style.display = "block";
 
-          window.editPost = (id) => {
-            window.location.href = `edit.html?id=${id}`;
-          };
-        </script>
-      </body>
-    </html>
+          adminPanel.style.display = "none";
+
+          if (user) {
+            alert("Bạn không phải admin!");
+
+            await signOut(auth);
+          }
+        }
+      });
+
+      // =====================
+      // LOAD POSTS
+      // =====================
+      async function loadPosts() {
+        postList.innerHTML = "";
+
+        const snapshot = await getDocs(collection(db, "myblog"));
+
+        snapshot.forEach((docSnap) => {
+          const doc = docSnap.data();
+
+          const id = docSnap.id;
+
+          postList.innerHTML += `
+            <div class="post">
+
+              <h2>${doc.Name_of_blog}</h2> <br>
+
+              <p>${doc.date}</p> <br>
+            
+              <div class="actions">
+
+                <button
+                  class="edit"
+                  onclick="editPost('${id}')"
+                >
+                  Sửa
+                </button>
+
+                <button
+                  class="delete"
+                  onclick="deletePost('${id}')"
+                >
+                  Xóa
+                </button>
+
+              </div>
+
+            </div>
+          `;
+        });
+      }
+
+      // =====================
+      // DELETE
+      // =====================
+      window.deletePost = async (id) => {
+        if (confirm("Xóa bài này?")) {
+          await deleteDoc(doc(db, "myblog", id));
+
+          loadPosts();
+        }
+      };
+
+      // =====================
+      // EDIT
+      // =====================
+      window.editPost = (id) => {
+        window.location.href = `edit.html?id=${id}`;
+      };
+
+      // =====================
+      // LOGOUT
+      // =====================
+      window.logout = async () => {
+        await signOut(auth);
+
+        alert("Đã đăng xuất!");
+      };
+    </script>
   </body>
 </html>

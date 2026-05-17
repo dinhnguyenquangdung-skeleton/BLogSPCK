@@ -52,12 +52,12 @@
 
       // load dữ liệu
       async function loadPost() {
-        const snap = await getDoc(doc(db, "posts", id));
+        const snap = await getDoc(doc(db, "myblog", id));
 
         if (snap.exists()) {
           const data = snap.data();
-          titleEl.value = data.title;
-          contentEl.value = data.content;
+          titleEl.value = data.Name_of_blog;
+          contentEl.value = data.describe;
         }
       }
 
@@ -74,9 +74,10 @@
           btn.innerText = "Đang lưu...";
           btn.disabled = true;
 
-          await updateDoc(doc(db, "posts", id), {
-            title: titleEl.value,
-            content: contentEl.value,
+          await updateDoc(doc(db, "myblog", id), {
+            Name_of_blog: titleEl.value,
+
+            describe: contentEl.value,
           });
 
           // ✅ quay lại dashboard

@@ -64,12 +64,15 @@
           btn.innerText = "Đang đăng...";
           btn.disabled = true;
 
-          await addDoc(collection(db, "posts"), {
-            title,
-            content,
-            createdAt: new Date(),
-          });
+          await addDoc(collection(db, "myblog"), {
+            Name_of_blog: title,
 
+            describe: content,
+
+            date: new Date().toLocaleDateString(),
+
+            likes: 0,
+          });
           // ✅ chuyển về admin
           window.location.href = "admin.html";
         } catch (err) {
