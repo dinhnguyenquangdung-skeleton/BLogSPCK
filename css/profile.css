@@ -6,7 +6,8 @@
 }
 
 body {
-  background: #0f172a;
+  background-image: url("../img/image.png");
+  background-size: cover; /* phủ toàn màn hình */
   color: white;
   min-height: 100vh;
 }
